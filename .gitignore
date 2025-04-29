@@ -1,3 +1,47 @@
+# Arquivos de configuração local
 /configs/app.env
+
+# Binários e diretórios de build
 /bin
+/main
+
+# IDE/Editor
 /.vscode
+/.idea
+*.swp
+*.swo
+
+# Go específico
+# Binários do Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Arquivos de teste
+*.test
+
+# Output do coverage
+*.out
+
+# Dependências do Go (se não usar vendoring)
+/pkg/
+/go/pkg/
+
+# Arquivos de módulo do Go
+go.sum
+
+# Diretório de cache do Go
+/.cache/
+
+# Variáveis ​​de ambiente
+.env
+*.env.local
+
+# Logs
+*.log
+
+# Diretórios de usuário específico
+.DS_Store
+Thumbs.db
