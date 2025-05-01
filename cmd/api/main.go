@@ -42,6 +42,7 @@ func main() {
 
     // Routes
     e.POST("/api/users", userHandler.CreateUser)
+    e.GET("/api/users/:id", userHandler.GetUser)
 
     e.Logger.Fatal(e.Start(":8080"))
 }

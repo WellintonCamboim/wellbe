@@ -1,11 +1,11 @@
 package services
 
 import (
-    "errors"
-    "time"
+	"errors"
+	"time"
 
-    "github.com/WellintonCamboim/wellbe/internal/models"
-    "github.com/WellintonCamboim/wellbe/internal/repositories"
+	"github.com/WellintonCamboim/wellbe/internal/models"
+	"github.com/WellintonCamboim/wellbe/internal/repositories"
 )
 
 type UserService struct {
@@ -42,5 +42,17 @@ func (s *UserService) CreateUser(req models.CreateUserRequest) (*models.User, er
         return nil, err
     }
 
+    return user, nil
+}
+
+// Add to UserService
+func (s *UserService) GetUserByID(id uint) (*models.User, error) {
+    user, err := s.repo.FindByID(id)
+    if err != nil {
+        return nil, err
+    }
+    if user == nil {
+        return nil, errors.New("user not found")
+    }
     return user, nil
 }
