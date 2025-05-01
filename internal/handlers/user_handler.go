@@ -1,25 +1,39 @@
 package handlers
 
 import (
-    "net/http"
-    "github.com/labstack/echo/v4"
-    "github.com/WellintonCamboim/wellbe/internal/models"
-    "github.com/WellintonCamboim/wellbe/internal/services"
+	"net/http"
+
+	"github.com/WellintonCamboim/wellbe/internal/models"
+	"github.com/WellintonCamboim/wellbe/internal/services"
+	"github.com/labstack/echo/v4"
 )
 
+// UserHandler handles HTTP requests related to users
 type UserHandler struct {
-    userService *services.UserService  // Mude para ponteiro
+    userService *services.UserService
 }
 
+// NewUserHandler creates a new instance of UserHandler
 func NewUserHandler(userService *services.UserService) *UserHandler {
     return &UserHandler{userService: userService}
 }
 
+// CreateUser godoc
+// @Summary Creates a new user
+// @Description Registers a new user in the system
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param request body models.CreateUserRequest true "User data"
+// @Success 201 {object} models.User "User successfully created"
+// @Failure 400 {object} map[string]string "Invalid data"
+// @Failure 422 {object} map[string]string "Unprocessable entity"
+// @Router /api/users [post]
 func (h *UserHandler) CreateUser(c echo.Context) error {
     var req models.CreateUserRequest
     
     if err := c.Bind(&req); err != nil {
-        return c.JSON(http.StatusBadRequest, map[string]string{"error": "dados inválidos"})
+        return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid data"})
     }
 
     user, err := h.userService.CreateUser(req)

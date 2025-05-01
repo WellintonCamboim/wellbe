@@ -1,0 +1,93 @@
+basePath: /api
+definitions:
+  github_com_WellintonCamboim_wellbe_internal_models.CreateUserRequest:
+    properties:
+      birth_date:
+        example: "1990-01-01"
+        type: string
+      education_level:
+        example: Bachelor's Degree
+        type: string
+      email:
+        example: user@example.com
+        type: string
+      phone:
+        example: "+5511999999999"
+        minLength: 10
+        type: string
+      profession:
+        example: Software Engineer
+        type: string
+    required:
+    - birth_date
+    - email
+    type: object
+  github_com_WellintonCamboim_wellbe_internal_models.User:
+    properties:
+      birth_date:
+        example: "1990-01-01T00:00:00Z"
+        type: string
+      created_at:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+      education_level:
+        example: Bachelor's Degree
+        type: string
+      email:
+        example: user@example.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      phone:
+        example: "+5511999999999"
+        type: string
+      profession:
+        example: Software Engineer
+        type: string
+      updated_at:
+        example: "2023-01-01T00:00:00Z"
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API for user management
+  title: Wellbe API
+  version: "1.0"
+paths:
+  /api/users:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new user in the system
+      parameters:
+      - description: User data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_WellintonCamboim_wellbe_internal_models.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User successfully created
+          schema:
+            $ref: '#/definitions/github_com_WellintonCamboim_wellbe_internal_models.User'
+        "400":
+          description: Invalid data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "422":
+          description: Unprocessable entity
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Creates a new user
+      tags:
+      - users
+swagger: "2.0"
