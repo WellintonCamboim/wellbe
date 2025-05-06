@@ -6,6 +6,7 @@ import (
 
 	"github.com/WellintonCamboim/wellbe/internal/models"
 	"github.com/WellintonCamboim/wellbe/internal/repositories"
+	"github.com/google/uuid"
 )
 
 type UserService struct {
@@ -31,6 +32,7 @@ func (s *UserService) CreateUser(req models.CreateUserRequest) (*models.User, er
     }
 
     user := &models.User{
+        ID:             uuid.New(), 
         Email:          req.Email,
         BirthDate:      birthDate,
         Phone:          req.Phone,
@@ -46,7 +48,7 @@ func (s *UserService) CreateUser(req models.CreateUserRequest) (*models.User, er
 }
 
 // Add to UserService
-func (s *UserService) GetUserByID(id uint) (*models.User, error) {
+func (s *UserService) GetUserByID(id uuid.UUID) (*models.User, error) {
     user, err := s.repo.FindByID(id)
     if err != nil {
         return nil, err

@@ -4,13 +4,14 @@ import (
 	"errors"
 
 	"github.com/WellintonCamboim/wellbe/internal/models"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type UserRepository interface {
     Create(user *models.User) error
     EmailExists(email string) (bool, error)
-    FindByID(id uint) (*models.User, error)
+    FindByID(id uuid.UUID) (*models.User, error)
 }
 
 
@@ -33,7 +34,7 @@ func (r *userRepository) EmailExists(email string) (bool, error) {
 }
 
 // Implement the FindByID method in userRepository
-func (r *userRepository) FindByID(id uint) (*models.User, error) {
+func (r *userRepository) FindByID(id uuid.UUID) (*models.User, error) {
     var user models.User
     err := r.db.First(&user, id).Error
     if err != nil {

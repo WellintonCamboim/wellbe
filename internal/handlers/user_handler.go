@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/WellintonCamboim/wellbe/internal/models"
 	"github.com/WellintonCamboim/wellbe/internal/services"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -51,19 +51,20 @@ func (h *UserHandler) CreateUser(c echo.Context) error {
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param id path int true "User ID"
+// @Param id path string true "User ID" format uuid
 // @Success 200 {object} models.User "User found"
 // @Failure 400 {object} map[string]string "Invalid ID format"
 // @Failure 404 {object} map[string]string "User not found"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /api/users/{id} [get]
 func (h *UserHandler) GetUser(c echo.Context) error {
-    id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+    idStr := c.Param("id")
+    id, err := uuid.Parse(idStr)
     if err != nil {
         return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID"})
     }
 
-    user, err := h.userService.GetUserByID(uint(id))
+    user, err := h.userService.GetUserByID(id)
     if err != nil {
         if err.Error() == "user not found" {
             return c.JSON(http.StatusNotFound, map[string]string{"error": err.Error()})

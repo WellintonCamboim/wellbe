@@ -1,8 +1,0 @@
-DROP TABLE IF EXISTS sleep_record;
-DROP TABLE IF EXISTS skill;
-DROP TABLE IF EXISTS task;
-DROP TABLE IF EXISTS emotion_log;
-DROP TYPE IF EXISTS day_period;
-DROP TYPE IF EXISTS emotion_type;
-DROP TABLE IF EXISTS user_address;
-DROP TABLE IF EXISTS "user";

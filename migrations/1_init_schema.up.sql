@@ -1,5 +1,8 @@
 BEGIN;
 
+-- Habilita extensão UUID
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- Criação dos tipos ENUM
 DO $$
 BEGIN
@@ -19,7 +22,7 @@ END$$;
 
 -- Tabelas básicas
 CREATE TABLE IF NOT EXISTS "user" (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     email VARCHAR(255) UNIQUE NOT NULL,
     birth_date DATE NOT NULL,
     phone VARCHAR(20),
@@ -30,8 +33,8 @@ CREATE TABLE IF NOT EXISTS "user" (
 );
 
 CREATE TABLE IF NOT EXISTS user_address (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER UNIQUE NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     street VARCHAR(255),
     number VARCHAR(20),
     complement VARCHAR(100),
@@ -41,12 +44,13 @@ CREATE TABLE IF NOT EXISTS user_address (
     country VARCHAR(100) NOT NULL DEFAULT 'Brasil',
     postal_code VARCHAR(20),
     is_primary BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_user_address UNIQUE (user_id)
 );
 
 CREATE TABLE IF NOT EXISTS emotion_log (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     emotion emotion_type NOT NULL,
     period day_period NOT NULL,
     logged_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -55,8 +59,8 @@ CREATE TABLE IF NOT EXISTS emotion_log (
 
 -- Demais tabelas (task, skill, sleep_record)...
 CREATE TABLE IF NOT EXISTS task (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     title VARCHAR(100) NOT NULL,
     description TEXT,
     due_date DATE,
@@ -66,8 +70,8 @@ CREATE TABLE IF NOT EXISTS task (
 );
 
 CREATE TABLE IF NOT EXISTS skill (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     name VARCHAR(100) NOT NULL,
     proficiency_level INTEGER NOT NULL CHECK (proficiency_level BETWEEN 1 AND 10),
     category VARCHAR(50),
@@ -76,8 +80,8 @@ CREATE TABLE IF NOT EXISTS skill (
 );
 
 CREATE TABLE IF NOT EXISTS sleep_record (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     record_date DATE NOT NULL DEFAULT CURRENT_DATE,
     target_hours DECIMAL(3,1) NOT NULL CHECK (target_hours BETWEEN 4 AND 12),
     actual_hours DECIMAL(3,1) NOT NULL CHECK (actual_hours BETWEEN 0 AND 24),

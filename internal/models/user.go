@@ -1,10 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 // User represents a user in the system
 type User struct {
-    ID             uint      `json:"id" gorm:"primaryKey" example:"1"`
+    ID             uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()" json:"id"`
     Email          string    `json:"email" gorm:"unique;not null" example:"user@example.com"`
     BirthDate      time.Time `json:"birth_date" gorm:"not null" example:"1990-01-01T00:00:00Z"`
     Phone          *string   `json:"phone,omitempty" gorm:"size:20" example:"+5511999999999"`
