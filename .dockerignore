@@ -1,0 +1,31 @@
+# Diretórios ignorados
+.git/
+.idea/
+.vscode/
+node_modules/
+dist/
+tmp/
+
+# Arquivos ignorados
+*.log
+*.md
+*.pdf
+.env*                # Ignora todos .env (inclusive configs/app.env)
+docker-compose.override.yml
+
+# Específico para Go
+bin/
+pkg/
+*.test
+*.exe
+
+# Permita apenas o necessário para o build
+!cmd/
+!pkg/
+!go.mod
+!go.sum
+!Dockerfile
+!docker-compose.yml
+!migrations/
+!configs/app.env
+!configs/app.env.prod

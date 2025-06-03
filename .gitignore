@@ -1,47 +1,29 @@
-# Arquivos de configuração local
-/configs/app.env
-
-# Binários e diretórios de build
-/bin
-/main
-
-# IDE/Editor
-/.vscode
-/.idea
+# Diretórios e arquivos de IDE/editor
+.idea/
+.vscode/
 *.swp
-*.swo
 
-# Go específico
-# Binários do Go
+# Binários e dependências Go
+bin/
+pkg/
 *.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-
-# Arquivos de teste
 *.test
 
-# Output do coverage
-*.out
-
-# Dependências do Go (se não usar vendoring)
-/pkg/
-/go/pkg/
-
-# Arquivos de módulo do Go
-go.sum
-
-# Diretório de cache do Go
-/.cache/
-
-# Variáveis ​​de ambiente
+# Arquivos de ambiente
 .env
-*.env.local
+.env.*
+configs/app.env
+configs/app.env.*
 
-# Logs
+# Logs e arquivos temporários
 *.log
+tmp/
+dist/
+node_modules/
 
-# Diretórios de usuário específico
-.DS_Store
-Thumbs.db
+# Outros arquivos sensíveis
+*.pem
+*.key
+*.crt
+*.sql
+*.dump
