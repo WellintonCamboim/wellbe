@@ -40,9 +40,15 @@ func main() {
     userService := services.NewUserService(userRepo)
     userHandler := handlers.NewUserHandler(userService)
 
+    // Dependency injection para emotion_log
+    emotionLogRepo := repositories.NewEmotionLogRepository(db)
+    emotionLogService := services.NewEmotionLogService(emotionLogRepo)
+    emotionLogHandler := handlers.NewEmotionLogHandler(emotionLogService)
+
     // Routes
     e.POST("/api/users", userHandler.CreateUser)
     e.GET("/api/users/:id", userHandler.GetUser)
+    e.POST("/api/emotion-logs", emotionLogHandler.CreateEmotionLog)
 
     e.Logger.Fatal(e.Start(":8080"))
 }
