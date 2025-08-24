@@ -6,6 +6,7 @@
 package main
 
 import (
+	"os"
 	"github.com/WellintonCamboim/wellbe/api/docs"
 	_ "github.com/WellintonCamboim/wellbe/api/docs"
 	"github.com/WellintonCamboim/wellbe/internal/handlers"
@@ -15,40 +16,45 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-    // Swagger configuration
-    docs.SwaggerInfo.Title = "Wellbe API"
-    docs.SwaggerInfo.Version = "1.0"
-    docs.SwaggerInfo.Host = "localhost:8080"
-    docs.SwaggerInfo.BasePath = "/api"
+	if env := os.Getenv("APP_ENV"); env == "" || env == "development" {
+		_ = godotenv.Load(".env")
+	}
 
-    db := database.Connect()
-    e := echo.New()
-    
-    // Middleware
-    e.Use(middleware.Logger())
-    e.Use(middleware.Recover())
-    // e.Validator = NewCustomValidator() // You will need to implement this
+	// Swagger configuration
+	docs.SwaggerInfo.Title = "Wellbe API"
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = "localhost:8080"
+	docs.SwaggerInfo.BasePath = "/api"
 
-    // Swagger UI
-    e.GET("/swagger/*", echoSwagger.WrapHandler)
+	db := database.Connect()
+	e := echo.New()
 
-    // Dependency injection
-    userRepo := repositories.NewUserRepository(db)
-    userService := services.NewUserService(userRepo)
-    userHandler := handlers.NewUserHandler(userService)
+	// Middleware
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	// e.Validator = NewCustomValidator() // You will need to implement this
 
-    // Dependency injection para emotion_log
-    emotionLogRepo := repositories.NewEmotionLogRepository(db)
-    emotionLogService := services.NewEmotionLogService(emotionLogRepo)
-    emotionLogHandler := handlers.NewEmotionLogHandler(emotionLogService)
+	// Swagger UI
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-    // Routes
-    e.POST("/api/users", userHandler.CreateUser)
-    e.GET("/api/users/:id", userHandler.GetUser)
-    e.POST("/api/emotion-logs", emotionLogHandler.CreateEmotionLog)
+	// Dependency injection
+	userRepo := repositories.NewUserRepository(db)
+	userService := services.NewUserService(userRepo)
+	userHandler := handlers.NewUserHandler(userService)
 
-    e.Logger.Fatal(e.Start(":8080"))
+	// Dependency injection para emotion_log
+	emotionLogRepo := repositories.NewEmotionLogRepository(db)
+	emotionLogService := services.NewEmotionLogService(emotionLogRepo)
+	emotionLogHandler := handlers.NewEmotionLogHandler(emotionLogService)
+
+	// Routes
+	e.POST("/api/users", userHandler.CreateUser)
+	e.GET("/api/users/:id", userHandler.GetUser)
+	e.POST("/api/emotion-logs", emotionLogHandler.CreateEmotionLog)
+
+	e.Logger.Fatal(e.Start(":8080"))
 }
