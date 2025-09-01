@@ -161,26 +161,56 @@ DB_NAME=wellbe
 
 ## 🏗 Migrações
 
-### 📂 Estrutura de migrações
+### 📦 Gerenciamento com golang-migrate
+
+Este projeto utiliza a ferramenta [golang-migrate/migrate](https://github.com/golang-migrate/migrate) para aplicar e reverter migrations de banco de dados de forma simples e segura.
+
+#### 📥 Instalação do migrate
+
+Execute no terminal:
+
+```bash
+go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+```
+
+Certifique-se de que o binário `migrate` está no seu PATH.
+
+#### 🚀 Aplicando migrations
+
+Para aplicar todas as migrations pendentes:
+
+```bash
+migrate -path migrations -database "postgres://wellbe:wellbe@localhost:5432/wellbe?sslmode=disable" up
+```
+
+#### ⏪ Revertendo a última migration
+
+```bash
+migrate -path migrations -database "postgres://wellbe:wellbe@localhost:5432/wellbe?sslmode=disable" down 1
+```
+
+#### 🆕 Criando uma nova migration
+
+Crie dois arquivos na pasta `migrations/` seguindo o padrão:
 
 ```
-migrations/
-├── 001_create_tables.sql
-├── 002_seed_data.sql
-└── ...
+X_nome_da_migration.up.sql   # Para aplicar
+X_nome_da_migration.down.sql # Para reverter
+```
+Exemplo:
+```
+4_add_updated_at_to_task.up.sql
+4_add_updated_at_to_task.down.sql
 ```
 
-- Arquivos são executados em ordem alfabética.
-- Migrações ocorrem automaticamente ao iniciar o container do banco.
-
-#### ➕ Adicionar nova migração
-
-1. Crie um arquivo `.sql` na pasta `migrations/`
-2. Reinicie o banco:
-
-    ```bash
-    docker-compose restart db
-    ```
+#### 💡 Dicas
+- O migrate controla o histórico das migrations aplicadas.
+- Se ocorrer erro e o banco ficar "dirty", limpe com:
+  ```bash
+  migrate -path migrations -database "postgres://wellbe:wellbe@localhost:5432/wellbe?sslmode=disable" force <versão>
+  ```
+  (Substitua `<versão>` pela última migration válida.)
+- Sempre mantenha as migrations versionadas e em ordem.
 
 ---
 
