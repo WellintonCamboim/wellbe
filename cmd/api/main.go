@@ -51,10 +51,24 @@ func main() {
 	emotionLogService := services.NewEmotionLogService(emotionLogRepo)
 	emotionLogHandler := handlers.NewEmotionLogHandler(emotionLogService)
 
-	// Routes
+	// Dependency injection para task
+	taskRepo := repositories.NewTaskRepository(db)
+	taskService := services.NewTaskService(taskRepo)
+	taskHandler := handlers.NewTaskHandler(taskService)
+
+	// Rotas de usuário
 	e.POST("/api/users", userHandler.CreateUser)
 	e.GET("/api/users/:id", userHandler.GetUser)
+
+	// Rotas de emotion_log
 	e.POST("/api/emotion-logs", emotionLogHandler.CreateEmotionLog)
+
+	// Rotas de tarefas (task)
+	e.POST("/api/tasks", taskHandler.CreateTask)
+	e.GET("/api/tasks/:id", taskHandler.GetTask)
+	e.GET("/api/tasks", taskHandler.ListTasksByUser)
+	e.PUT("/api/tasks/:id", taskHandler.UpdateTask)
+	e.DELETE("/api/tasks/:id", taskHandler.DeleteTask)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
