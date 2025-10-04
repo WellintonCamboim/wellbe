@@ -1,0 +1,6 @@
+BEGIN;
+
+ALTER TABLE skill 
+DROP COLUMN IF EXISTS updated_at;
+
+COMMIT;
