@@ -51,6 +51,11 @@ func main() {
 	emotionLogService := services.NewEmotionLogService(emotionLogRepo)
 	emotionLogHandler := handlers.NewEmotionLogHandler(emotionLogService)
 
+	// Dependency injection para skill
+	skillRepo := repositories.NewSkillRepository(db)
+	skillService := services.NewSkillService(skillRepo)
+	skillHandler := handlers.NewSkillHandler(skillService)
+
 	// Dependency injection para task
 	taskRepo := repositories.NewTaskRepository(db)
 	taskService := services.NewTaskService(taskRepo)
@@ -69,6 +74,13 @@ func main() {
 	e.GET("/api/tasks", taskHandler.ListTasksByUser)
 	e.PUT("/api/tasks/:id", taskHandler.UpdateTask)
 	e.DELETE("/api/tasks/:id", taskHandler.DeleteTask)
+
+	// Rotas de skills
+	e.POST("/api/skills", skillHandler.CreateSkill)
+	e.GET("/api/skills/:id", skillHandler.GetSkill)
+	e.GET("/api/skills/user", skillHandler.ListSkillsByUser)
+	e.PUT("/api/skills/:id", skillHandler.UpdateSkill)
+	e.DELETE("/api/skills/:id", skillHandler.DeleteSkill)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

@@ -18,13 +18,13 @@ func NewSkillService(repo repositories.SkillRepository) *SkillService {
 }
 
 func (s *SkillService) CreateSkill(req models.CreateSkillRequest) (*models.Skill, error) {
-	acquiredAt := (*time.Time)(nil)
-	if req.AcquiredAt != nil && *req.AcquiredAt != "" {
-		parsed, err := time.Parse("2006-01-02", *req.AcquiredAt)
+	LastPracticed := (*time.Time)(nil)
+	if req.LastPracticed != nil && *req.LastPracticed != "" {
+		parsed, err := time.Parse("2006-01-02", *req.LastPracticed)
 		if err != nil {
 			return nil, errors.New("invalid date format")
 		}
-		acquiredAt = &parsed
+		LastPracticed = &parsed
 	}
 
 	userID, err := uuid.Parse(req.UserID)
@@ -36,8 +36,8 @@ func (s *SkillService) CreateSkill(req models.CreateSkillRequest) (*models.Skill
 		ID:         uuid.New(),
 		UserID:     userID,
 		Name:       req.Name,
-		Level:      req.Level,
-		AcquiredAt: acquiredAt,
+		ProficiencyLevel:      req.ProficiencyLevel,
+		LastPracticed: LastPracticed,
 	}
 
 	if err := s.repo.Create(skill); err != nil {
@@ -66,15 +66,15 @@ func (s *SkillService) UpdateSkill(id uuid.UUID, req models.UpdateSkillRequest) 
     if req.Name != nil {
         skill.Name = *req.Name
     }
-    if req.Level != nil {
-        skill.Level = *req.Level
+    if req.ProficiencyLevel != nil {
+        skill.ProficiencyLevel = *req.ProficiencyLevel
     }
-    if req.AcquiredAt != nil && *req.AcquiredAt != "" {
-        parsed, err := time.Parse("2006-01-02", *req.AcquiredAt)
+    if req.LastPracticed != nil && *req.LastPracticed != "" {
+        parsed, err := time.Parse("2006-01-02", *req.LastPracticed)
         if err != nil {
 			return nil, errors.New("invalid date format")
         }
-        skill.AcquiredAt = &parsed
+        skill.LastPracticed = &parsed
     }
 
     if err := s.repo.Update(skill); err != nil {
