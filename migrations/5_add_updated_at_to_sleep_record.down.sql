@@ -1,0 +1,5 @@
+BEGIN;
+
+ALTER TABLE sleep_record DROP COLUMN IF EXISTS updated_at;
+
+COMMIT;
